@@ -3292,7 +3292,7 @@ PRIVATE char *append_str(const char *zText, int n, int p1, int p2){
 */
 PRIVATE void translate_code(struct lemon *lemp, struct rule *rp){
   char *cp, *xp;
-  int i;
+  int i, j, dt;
   char lhsused = 0;    /* True if the LHS element has been used */
   char refutable = 0;
 
@@ -3313,22 +3313,35 @@ PRIVATE void translate_code(struct lemon *lemp, struct rule *rp){
   }
   for(i=rp->nrhs; i>0; ){
     i--;
-    if (rp->rhs[i]->dtnum)
+    dt = rp->rhs[i]->type!=MULTITERMINAL? rp->rhs[i]->dtnum : rp->rhs[i]->subsym[0]->dtnum;
+    if (dt)
       append_str("let yyp%d = self.yystack.pop().unwrap();\n",0,i,0);
     else
       append_str("self.yystack.pop().unwrap();\n",0,0,0);
   }
   append_str("match (",0,0,0);
   for(i=0; i<rp->nrhs; i++) {
-    if (rp->rhs[i] != lemp->errsym && rp->rhs[i]->dtnum) {
+    dt = rp->rhs[i]->type!=MULTITERMINAL? rp->rhs[i]->dtnum : rp->rhs[i]->subsym[0]->dtnum;
+    if (rp->rhs[i] != lemp->errsym && rp->rhsalias[i] && dt) {
       refutable = 1;
       append_str("yyp%d.minor,",0,i,0);
+    }
+    if (rp->rhsalias[i] && rp->rhs[i]->type==MULTITERMINAL) {
+        for (j=1;j<rp->rhs[i]->nsubsym;j++) {
+            if (rp->rhs[i]->subsym[j]->dtnum!=rp->rhs[i]->subsym[0]->dtnum) {
+                ErrorMsg(lemp->filename,rp->ruleline,
+                        "Compound tokens must have all the same type."
+                );
+                lemp->errorcnt++;
+            }
+        }
     }
   }
   append_str(") {\n (",0,0,0);
   for(i=0; i<rp->nrhs; i++) {
-    if (rp->rhs[i] != lemp->errsym && rp->rhs[i]->dtnum) {
-      append_str("YYMinorType::YY%d(yy%d),",0,rp->rhs[i]->dtnum,i);
+    dt = rp->rhs[i]->type!=MULTITERMINAL? rp->rhs[i]->dtnum : rp->rhs[i]->subsym[0]->dtnum;
+    if (rp->rhs[i] != lemp->errsym && rp->rhsalias[i] && dt){
+      append_str("YYMinorType::YY%d(yy%d),",0,dt,i);
     }
   }
   append_str(") => {\n",0,0,0);
