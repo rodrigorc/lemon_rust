@@ -3853,10 +3853,10 @@ void ReportTable(
 
   /* Generate the table of fallback tokens.
   */
-  int mx = lemp->nterminal - 1;
-  while( mx>0 && lemp->symbols[mx]->fallback==0 ){ mx--; }
+  int mx = lemp->nterminal;
+  while( mx>0 && lemp->symbols[mx-1]->fallback==0 ){ mx--; }
   fprintf(out, "const YY_FALLBACK: [i32; %d] = [\n", mx); lineno++;
-  for(i=0; i<=mx; i++){
+  for(i=0; i<mx; i++){
     struct symbol *p = lemp->symbols[i];
     if( p->fallback==0 ){
       fprintf(out, "    0,  /* %10s => nothing */\n", p->name);
