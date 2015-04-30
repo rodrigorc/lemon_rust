@@ -68,6 +68,8 @@ impl Parser {
         p
     }
 
+%%
+
     pub fn parse(&mut self, token: Token) {
 
         let yymajor = token_major(&token);

@@ -3946,6 +3946,17 @@ void ReportTable(
   }
   tplt_xfer(in,out,&lineno);
 
+  if(lemp->arg) {
+    fprintf(out,"    pub fn into_extra(self) -> %s {\n", lemp->arg+i+1); lineno++;
+    fprintf(out,"        self.%.*s\n", i,lemp->arg); lineno++;
+    fprintf(out,"    }\n"); lineno++;
+    fprintf(out,"    pub fn extra(&self) -> &%s {\n", lemp->arg+i+1); lineno++;
+    fprintf(out,"        &self.%.*s\n", i,lemp->arg); lineno++;
+    fprintf(out,"    }\n"); lineno++;
+  }
+  tplt_xfer(in,out,&lineno);
+
+
   /* Generate code which execution during each REDUCE action */
   for(rp=lemp->rule; rp; rp=rp->next){
     translate_code(lemp, rp);
