@@ -1480,7 +1480,7 @@ int main(int argc, char **argv)
   static int compress = 0;
   static int quiet = 0;
   static int statistics = 0;
-  static int nolinenosflag = 0;
+  static int nolinenosflag = 1;
   static int noResort = 0;
   static struct s_options options[] = {
     {OPT_FLAG, "b", (char*)&basisflag, "Print only the basis in report."},
