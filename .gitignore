@@ -1,0 +1,4 @@
+examples/*/build
+examples/*/target
+examples/*/src/parser.rs
+*.out
