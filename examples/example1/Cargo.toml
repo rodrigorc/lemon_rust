@@ -1,0 +1,8 @@
+[package]
+name = "lemon_rust_ex1"
+version = "0.0.1"
+authors = ["Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>"]
+build = "build.rs"
+
+[dependencies]
+regex = "*"
