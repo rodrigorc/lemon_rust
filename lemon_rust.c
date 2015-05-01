@@ -3933,25 +3933,20 @@ void ReportTable(
   tplt_xfer(in,out,&lineno);
 
   if (lemp->arg) {
-    fprintf(out,"%s,\n", lemp->arg); lineno++;
+    fprintf(out,"    extra: %s,\n", lemp->arg); lineno++;
   }
   tplt_xfer(in,out,&lineno);
   if (lemp->arg) {
-    fprintf(out,"%s,\n", lemp->arg); lineno++;
-  }
-  tplt_xfer(in,out,&lineno);
-  if (lemp->arg) {
-    for (i=0;lemp->arg[i] && lemp->arg[i]!=':';i++);
-    fprintf(out,"%.*s: %.*s,\n", i,lemp->arg,i,lemp->arg); lineno++;
+    fprintf(out,"            extra: %s,\n", lemp->arg); lineno++;
   }
   tplt_xfer(in,out,&lineno);
 
   if(lemp->arg) {
-    fprintf(out,"    pub fn into_extra(self) -> %s {\n", lemp->arg+i+1); lineno++;
-    fprintf(out,"        self.%.*s\n", i,lemp->arg); lineno++;
+    fprintf(out,"    pub fn into_extra(self) -> %s {\n", lemp->arg); lineno++;
+    fprintf(out,"        self.extra\n"); lineno++;
     fprintf(out,"    }\n"); lineno++;
-    fprintf(out,"    pub fn extra(&self) -> &%s {\n", lemp->arg+i+1); lineno++;
-    fprintf(out,"        &self.%.*s\n", i,lemp->arg); lineno++;
+    fprintf(out,"    pub fn extra(&self) -> &%s {\n", lemp->arg); lineno++;
+    fprintf(out,"        &self.extra\n"); lineno++;
     fprintf(out,"    }\n"); lineno++;
   }
   tplt_xfer(in,out,&lineno);

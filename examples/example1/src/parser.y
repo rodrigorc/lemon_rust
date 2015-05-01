@@ -24,7 +24,7 @@ pub enum Expression {
 
 }
 
-%extra_argument { extra: Option<Expression> }
+%extra_argument { Option<Expression> }
 %syntax_error { println!("syntax error"); }
 
 %parse_accept {

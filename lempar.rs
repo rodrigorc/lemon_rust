@@ -61,9 +61,7 @@ impl Parser {
     pub fn new(
 %%
         ) -> Parser {
-        let mut p = Parser { yyerrcnt: -1, yystack: Vec::new(),
-%%
-        };
+        let mut p = Parser { yyerrcnt: -1, yystack: Vec::new(), extra: extra};
         p.yystack.push(YYStackEntry{stateno: 0, major: 0, minor: YYMinorType::YY0});
         p
     }
