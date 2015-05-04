@@ -24,6 +24,8 @@ pub enum Expression {
 
 }
 
+%derive_token { Debug }
+
 %extra_argument { Option<Expression> }
 %syntax_error { println!("syntax error"); }
 

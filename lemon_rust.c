@@ -373,6 +373,7 @@ struct lemon {
   char *failure;           /* Code to execute on parser failure */
   char *accept;            /* Code to execute when the parser excepts */
   char *extracode;         /* Code appended to the generated file */
+  char *derivetoken;       /* #[derive()] directives for the Token type */
   char *filename;          /* Name of the input file */
   char *outname;           /* Name of the current output file */
   int nconflict;           /* Number of parsing conflicts */
@@ -2292,6 +2293,8 @@ to follow the previous rule.");
         psp->state = WAITING_FOR_DECL_ARG;
         if( strcmp(x,"include")==0 ){
           psp->declargslot = &(psp->gp->include);
+        }else if( strcmp(x,"derive_token")==0 ){
+          psp->declargslot = &(psp->gp->derivetoken);
         }else if( strcmp(x,"code")==0 ){
           psp->declargslot = &(psp->gp->extracode);
         }else if( strcmp(x,"syntax_error")==0 ){
@@ -3736,8 +3739,11 @@ void ReportTable(
   free(ax);
 
   /* Output the yy_action table */
-  //fprintf(out,"#[derive(Debug, Copy, Clone)]\n"); lineno++; //TODO
-  fprintf(out,"#[derive(Debug)]\n"); lineno++;
+  if (lemp->derivetoken) {
+      fprintf(out,"#[derive("); lineno++;
+      tplt_print(out,lemp,lemp->derivetoken,&lineno);
+      fprintf(out,")]\n"); lineno++;
+  }
   fprintf(out,"pub enum Token {\n"); lineno++;
   fprintf(out,"    EOI, //0\n"); lineno++;
   for(i=1; i<lemp->nterminal; i++){
