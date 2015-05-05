@@ -21,6 +21,7 @@ In the grammar file there are basically the following differences:
 1. There is no `%name` or `%token_prefix`directives. In C all the symbol names are global so this directive allows you to change the name of the generated symbols. In Rust, the generated file will be compiled as a _crate_ and it will have its own namespace.  So changing the names of the generated symbols is not needed.
 2. There are no destructors (`%destructor`, `%token_destructor` and `%default_destructor`). If you need to write destructors, just implement the `Drop` trait for the associated type.
 3. There is no `%token_type` directive. In Lemon\_C, all tokens must have the same type, while non-terminal symbols may have different types. In Lemon\_Rust there is no such distinctions, so you can specify the type for each individual token with ` %type`.
+4. There is a new `%derive_token` directive. It is used to add the `#[derive()]` directive to the generated `Token` type.
 
 In the invocation of the program:
 
