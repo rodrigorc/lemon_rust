@@ -30,4 +30,4 @@ In the invocation of the program:
 
 ##Detailed documentation
 
-To be completed...
+See the DOCUMENTATION.md file included in the source tree.
