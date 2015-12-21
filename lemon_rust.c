@@ -3755,6 +3755,13 @@ void ReportTable(
   }
   fprintf(out,"}\n"); lineno++;
 
+  fprintf(out,"const TOKEN_EOI: i32 = 0;\n");
+  lineno++;
+  for(i=1; i<lemp->nterminal; i++){
+    fprintf(out,"const TOKEN_%s: i32 = %d;\n",lemp->symbols[i]->name,i);
+    lineno++;
+  }
+
   fprintf(out,"#[inline]\n"); lineno++;
   fprintf(out,"fn token_major(t: &Token) -> i32 {\n"); lineno++;
   fprintf(out,"    unsafe { ::std::intrinsics::discriminant_value(t) as i32}\n"); lineno++;
