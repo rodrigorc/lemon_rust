@@ -3744,6 +3744,7 @@ void ReportTable(
       tplt_print(out,lemp,lemp->derivetoken,&lineno);
       fprintf(out,")]\n"); lineno++;
   }
+  fprintf(out,"#[derive(PartialEq,Debug)]\n"); lineno++;
   fprintf(out,"pub enum Token {\n"); lineno++;
   fprintf(out,"    EOI, //0\n"); lineno++;
   for(i=1; i<lemp->nterminal; i++){
