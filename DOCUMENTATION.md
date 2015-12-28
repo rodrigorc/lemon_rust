@@ -425,6 +425,22 @@ or also:
 
 Naturally, if they use a symbolic name (`(A)` in the example), then all the tokens must have the same type.
 
+#### The `%derive_token` directive
+
+This directive declares traits that the Token enum should automatically
+derive. For example:
+
+    %derive_token {Debug,PartialEq}
+
+results in the following code generated in the parser:
+
+    #[derive(Debug,PartialEq
+    )]
+    pub enum Token {
+        EOI, //0
+        ...
+    }
+
 ### Error Processing
 
 After extensive experimentation over several years, it has been discovered that the error recovery strategy used by *yacc* is about as good as it gets. And so that is what *lemon* uses.
