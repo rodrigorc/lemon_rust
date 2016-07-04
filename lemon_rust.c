@@ -212,6 +212,7 @@ void ReportOutput(struct lemon *);
 void ReportTable(struct lemon *);
 void CompressTables(struct lemon *);
 void ResortStates(struct lemon *);
+void EmitCHeader(struct lemon *);
 
 /********** From the file "set.h" ****************************************/
 void  SetSize(int);             /* All sets will be of size N */
@@ -1479,6 +1480,7 @@ int main(int argc, char **argv)
   static int rpflag = 0;
   static int basisflag = 0;
   static int compress = 0;
+  static int c_header = 0;
   static int quiet = 0;
   static int statistics = 0;
   static int nolinenosflag = 1;
@@ -1489,6 +1491,7 @@ int main(int argc, char **argv)
     {OPT_FSTR, "D", (char*)handle_D_option, "Define an %ifdef macro."},
     {OPT_FSTR, "f", 0, "Ignored.  (Placeholder for -f compiler options.)"},
     {OPT_FLAG, "g", (char*)&rpflag, "Print grammar without actions."},
+    {OPT_FLAG, "H", (char*)&c_header, "Emit C header file with token IDs"},
     {OPT_FSTR, "I", 0, "Ignored.  (Placeholder for '-I' compiler options.)"},
     {OPT_FLAG, "l", (char*)&nolinenosflag, "Do not print #line statements."},
     {OPT_FSTR, "O", 0, "Ignored.  (Placeholder for '-O' compiler options.)"},
@@ -1594,6 +1597,11 @@ int main(int argc, char **argv)
 
     /* Generate the source code for the parser */
     ReportTable(&lem);
+
+    /* Emit C Header */
+    if( c_header ){
+      EmitCHeader(&lem);
+    }
   }
   if( statistics ){
     printf("Parser statistics: %d terminals, %d nonterminals, %d rules\n",
@@ -3755,9 +3763,26 @@ void ReportTable(
   }
   fprintf(out,"}\n"); lineno++;
 
+  fprintf(out,"pub const TOKEN_EOI: i32 = 0;\n");
+  lineno++;
+  for(i=1; i<lemp->nterminal; i++){
+    fprintf(out,"pub const TOKEN_%s: i32 = %d;\n",lemp->symbols[i]->name,i);
+    lineno++;
+  }
+
   fprintf(out,"#[inline]\n"); lineno++;
   fprintf(out,"fn token_major(t: &Token) -> i32 {\n"); lineno++;
-  fprintf(out,"    unsafe { ::std::intrinsics::discriminant_value(t) as i32}\n"); lineno++;
+  fprintf(out,"    match t {\n"); lineno++;
+  fprintf(out,"        &Token::EOI => 0,\n");
+  for(i=1; i<lemp->nterminal; i++){
+    if(lemp->symbols[i]->datatype){
+      fprintf(out,"        &Token::%s(_) => TOKEN_%s,\n",lemp->symbols[i]->name,lemp->symbols[i]->name);
+    }else{
+      fprintf(out,"        &Token::%s => TOKEN_%s,\n",lemp->symbols[i]->name,lemp->symbols[i]->name);
+    }
+    lineno++;
+  }
+  fprintf(out,"    }\n"); lineno++;
   fprintf(out,"}\n"); lineno++;
   fprintf(out,"#[inline]\n"); lineno++;
   fprintf(out,"fn token_minor(t: Token) -> YYMinorType {\n"); lineno++;
@@ -4016,6 +4041,26 @@ void ReportTable(
   fclose(in);
   fclose(out);
   return;
+}
+
+void EmitCHeader(
+  struct lemon *lemp
+){
+  int i;
+  int lineno=1;
+  FILE *out = file_open(lemp,".h","wb");
+  if( out==0 ){
+    return;
+  }
+
+  fprintf(out,"#define TOKEN_%-20s    0\n","EOI");
+  lineno++;
+  for(i=1; i<lemp->nterminal; i++){
+    fprintf(out,"#define TOKEN_%-20s    %d\n",lemp->symbols[i]->name,i);
+    lineno++;
+  }
+
+  fclose(out);
 }
 
 /* Reduce the size of the action tables, if possible, by making use
