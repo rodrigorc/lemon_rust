@@ -1,5 +1,3 @@
-#![feature(core)] //for discriminant_value
-
 extern crate regex;
 mod parser;
 mod lexer;

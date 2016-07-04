@@ -3771,27 +3771,17 @@ void ReportTable(
   }
 
   fprintf(out,"#[inline]\n"); lineno++;
-  fprintf(out,"fn token_major(t: &Token) -> i32 {\n"); lineno++;
-  fprintf(out,"    match t {\n"); lineno++;
-  fprintf(out,"        &Token::EOI => 0,\n");
-  for(i=1; i<lemp->nterminal; i++){
-    if(lemp->symbols[i]->datatype){
-      fprintf(out,"        &Token::%s(_) => TOKEN_%s,\n",lemp->symbols[i]->name,lemp->symbols[i]->name);
-    }else{
-      fprintf(out,"        &Token::%s => TOKEN_%s,\n",lemp->symbols[i]->name,lemp->symbols[i]->name);
-    }
-    lineno++;
-  }
-  fprintf(out,"    }\n"); lineno++;
-  fprintf(out,"}\n"); lineno++;
-  fprintf(out,"#[inline]\n"); lineno++;
-  fprintf(out,"fn token_minor(t: Token) -> YYMinorType {\n"); lineno++;
+  //fprintf(out,"        &Token::%s(_) => TOKEN_%s,\n",lemp->symbols[i]->name,lemp->symbols[i]->name);
+  fprintf(out,"fn token_value(t: Token) -> (i32, YYMinorType) {\n"); lineno++;
   fprintf(out,"  match t {\n"); lineno++;
+  fprintf(out,"        Token::EOI => (0, YYMinorType::YY0),\n"); lineno++;
   for(i=1; i<lemp->nterminal; i++){
     if (lemp->symbols[i]->dtnum)
-      fprintf(out,"        Token::%s(x) => YYMinorType::YY%d(x),\n",lemp->symbols[i]->name,lemp->symbols[i]->dtnum); lineno++;
+      fprintf(out,"        Token::%s(x) => (%d, YYMinorType::YY%d(x)),\n",lemp->symbols[i]->name,i,lemp->symbols[i]->dtnum);
+    else
+      fprintf(out,"        Token::%s => (%d, YYMinorType::YY0),\n",lemp->symbols[i]->name,i);
+    lineno++;
   }
-  fprintf(out,"        _ => YYMinorType::YY0\n"); lineno++;
   fprintf(out,"  }\n"); lineno++;
   fprintf(out,"}\n"); lineno++;
 

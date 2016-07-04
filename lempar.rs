@@ -69,15 +69,13 @@ impl Parser {
 %%
 
     pub fn parse(&mut self, token: Token) {
-
-        let yymajor = token_major(&token);
+        let (yymajor, yyminor) = token_value(token);
         let yyendofinput = yymajor==0;
         let mut yyerrorhit = false;
         while !self.yystack.is_empty() {
             let yyact = self.find_shift_action(yymajor);
             if yyact < YYNSTATE {
                 assert!(!yyendofinput);  /* Impossible to shift the $ token */
-                let yyminor = token_minor(token);
                 self.yy_shift(yyact, yymajor, yyminor);
                 self.yyerrcnt -= 1;
                 break;
@@ -106,7 +104,7 @@ impl Parser {
                      **
                      */
                     if self.yyerrcnt < 0 {
-                        self.yy_syntax_error(&token);
+                        self.yy_syntax_error(yymajor, &yyminor);
                     }
                     let yymx = self.yystack[self.yystack.len() - 1].major;
                     if yymx==YYERRORSYMBOL || yyerrorhit {
@@ -141,7 +139,7 @@ impl Parser {
                      ** three input tokens have been successfully shifted.
                      */
                     if self.yyerrcnt <= 0 {
-                        self.yy_syntax_error(&token);
+                        self.yy_syntax_error(yymajor, &yyminor);
                     }
                     self.yyerrcnt = 3;
                     if yyendofinput {
@@ -241,7 +239,7 @@ impl Parser {
 %%
     }
 
-    fn yy_syntax_error(&mut self, token: &Token) {
+    fn yy_syntax_error(&mut self, yymajor: i32, yyminor: &YYMinorType) {
 %%
     }
 
