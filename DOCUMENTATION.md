@@ -47,6 +47,7 @@ As of this writing, the following command-line options are supported:
  * -g
  * -q
  * -s
+ * -H
  * -x
 
 The `-b` option reduces the amount of text in the report file by printing only the basis of each parser state, rather than the full configuration.
@@ -57,6 +58,8 @@ Using `-s` causes a brief summary of parser statistics to be printed. Like this:
 
     Parser statistics: 74 terminals, 70 nonterminals, 179 rules
                        340 states, 2026 parser table entries, 0 conflicts
+
+The `-H` option dumps the numeric token values to a C header file. This is useful if you want to write a lexer in another language (say, C) and call it from Rust. The same constants are available as `pub const i32` values from the Rust module.
 
 Finally, the `-x` option causes *lemon* to print its version number and copyright information and then stop without attempting to read the grammar or generate a parser.
 
