@@ -3758,7 +3758,7 @@ void ReportTable(
       if (lemp->symbols[i]->datatype)
           fprintf(out,"    %s(%s), //%d\n",lemp->symbols[i]->name,lemp->symbols[i]->datatype,i);
       else
-          fprintf(out,"    %s, //%d\n",lemp->symbols[i]->name,i); lineno++;
+          fprintf(out,"    %s, //%d\n",lemp->symbols[i]->name,i);
       lineno++;
   }
   fprintf(out,"}\n"); lineno++;
