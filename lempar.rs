@@ -61,7 +61,7 @@ impl Parser {
     pub fn new(
 %%
         ) -> Parser {
-        let mut p = Parser { yyerrcnt: -1, yystack: Vec::new(), extra: extra};
+        let mut p = Parser { yyerrcnt: -1, yystack: Vec::new(), extra };
         p.yystack.push(YYStackEntry{stateno: 0, major: 0, minor: YYMinorType::YY0});
         p
     }
@@ -186,9 +186,9 @@ impl Parser {
                     }
                 }
             }
-            return YY_DEFAULT[stateno as usize] as i32;
+            YY_DEFAULT[stateno as usize] as i32
         } else {
-            return YY_ACTION[i as usize] as i32;
+            YY_ACTION[i as usize] as i32
         }
     }
 
@@ -211,11 +211,11 @@ impl Parser {
         }
         assert!(i >= 0 && i < YY_ACTTAB_COUNT);
         assert!(YY_LOOKAHEAD[i as usize] as i32 == look_ahead);
-        return YY_ACTION[i as usize] as i32;
+        YY_ACTION[i as usize] as i32
     }
 
     fn yy_shift(&mut self, new_state: i32, major: i32, minor: YYMinorType) {
-        self.yystack.push(YYStackEntry{stateno: new_state, major: major, minor: minor});
+        self.yystack.push(YYStackEntry{stateno: new_state, major, minor});
     }
 
     fn yy_reduce(&mut self, yyruleno: i32) {
