@@ -1,9 +1,9 @@
-#The Lemon\_Rust Parser Generator
+# The Lemon_Rust Parser Generator
 
-Lemon\_Rust is a port to Rust of the Lemon Parser Generator (from now on, Lemon\_C) originally written by D. Richard Hipp for his SQLite parser.
+Lemon_Rust is a port to Rust of the Lemon Parser Generator (from now on, Lemon_C) originally written by D. Richard Hipp for his SQLite parser.
 The program itself it is still written in C, but the generated code is 100% Rust.
 
-This Lemon\_Rust guide is shamelessly based on the original [Lemon\_C guide](http://www.hwaci.com/sw/lemon/lemon.html).
+This Lemon_Rust guide is shamelessly based on the original [Lemon_C guide](http://www.hwaci.com/sw/lemon/lemon.html).
 
 *Lemon* is an LALR(1) parser generator for Rust. It does the same job as *bison* and *yacc*. But *lemon* is not another *bison* or *yacc* clone.
 It uses a different grammar syntax which is designed to reduce the number of coding errors.
@@ -117,7 +117,7 @@ There is one other interface routine that should be mentioned before we move on.
 
    ParseTrace(FILE *stream, char *zPrefix);
 After this routine is called, a short (one-line) message is written to the designated output stream every time the parser changes states or calls an action routine. Each such message is prefaced using the text given by zPrefix. This debugging output can be turned off by calling ParseTrace() again with a first argument of NULL (0).
- --> 
+ -->
 
 ## Differences With *yacc* and *bison*
 
@@ -141,7 +141,7 @@ A terminal symbol (token) is any string of alphanumeric and underscore character
 
 In *lemon*, terminal and nonterminal symbols do not need to be declared or identified in a separate section of the grammar file. *lemon* is able to generate a list of all terminals and nonterminals by examining the grammar rules, and it can always distinguish a terminal from a nonterminal by checking the case of the first character of the name.
 
-*yacc* and *bison* allow terminal symbols to have either alphanumeric names or to be individual characters included in single quotes, like this: ')' or '$'. *lemon* does not allow this alternative form for terminal symbols. With *lemon*, all symbols, terminals and nonterminals, must have alphanumeric names.
+*yacc* and *bison* allow terminal symbols to have either alphanumeric names or to be individual characters included in single quotes, like this: `')'` or `'$'`. *Lemon* does not allow this alternative form for terminal symbols. With *lemon*, all symbols, terminals and nonterminals, must have alphanumeric names.
 
 ### Grammar Rules
 
@@ -154,7 +154,7 @@ The main component of a *lemon* grammar file is a sequence of grammar rules. Eac
 
 There is one non-terminal in this example, `expr`, and five terminal symbols or tokens: `PLUS`, `TIMES`, `LPAREN`, `RPAREN` and `VALUE`.
 
-Like *yacc* and *bison*, *lemon* allows the grammar to specify a block of code that will be executed whenever a grammar rule is reduced by the parser. In *lemon*, this action is specified by putting the code (contained within curly braces {...}) immediately after the period that closes the rule. For example:
+Like *yacc* and *bison*, *lemon* allows the grammar to specify a block of code that will be executed whenever a grammar rule is reduced by the parser. In *lemon*, this action is specified by putting the code (contained within curly braces `{`...`}`) immediately after the period that closes the rule. For example:
 
     expr ::= expr PLUS expr.   { println!("Doing an addition..."); }
 
