@@ -2,6 +2,9 @@
 
 A port of the Lemon Parser Generator  to Rust.
 
+## Deprecation Warning!
+This project is being deprecated in favor of [_pomelo_](https://crates.io/crates/pomelo), a reimplementation of this very same code as a Rust procedural macro. You should use that for any new code, and also consider porting your existing code.
+
 ## Introduction
 
 From the original [Lemon documentation](http://www.hwaci.com/sw/lemon/lemon.html):
