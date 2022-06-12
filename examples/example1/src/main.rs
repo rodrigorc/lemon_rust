@@ -23,7 +23,7 @@ fn parse<R: BufRead>(file: &mut R) -> io::Result<parser::Expression> {
     let mut parser = parser::Parser::new(None);
 
     let mut line = String::new();
-    try!(file.read_line(&mut line));
+    file.read_line(&mut line)?;
 
     let mut subline : &str = &line[..];
 

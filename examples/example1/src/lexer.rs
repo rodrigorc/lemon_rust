@@ -3,8 +3,8 @@ use regex::Regex;
 
 pub enum LexerAction<TOKEN> {
     Ignore,
-    Action(Box<Fn(&str) -> Option<TOKEN>>),
-    Token(Box<Fn() -> TOKEN>),
+    Action(Box<dyn Fn(&str) -> Option<TOKEN>>),
+    Token(Box<dyn Fn() -> TOKEN>),
 }
 
 pub struct Lexer<TOKEN> {
@@ -25,8 +25,8 @@ impl<TOKEN> Lexer<TOKEN> {
 
     pub fn next(&self, s : &str) -> (usize, Option<&LexerAction<TOKEN>>) {
         for &(ref re, ref action) in self.re.iter() {
-            if let Some((_, to)) = re.find(s) {
-                return (to, Some(action));
+            if let Some(to) = re.find(s) {
+                return (to.range().len(), Some(action));
             }
         }
         (0, None)
